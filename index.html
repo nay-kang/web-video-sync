@@ -1,0 +1,25 @@
+<!doctype html>
+
+<html>
+<head>
+  <title>Watch Video Sync Online</title>
+  <meta charset="utf-8">
+  <link href="chat.css" rel="stylesheet">
+  <link href="shared.css" rel="stylesheet">
+  <script type="text/javascript" src="chatclient.js"></script>
+  <script type="text/javascript" src="adapter.js"></script>
+</head>
+<body>
+  <div class="container">
+	<div class="camerabox">
+		<video id="video" autoplay controls></video>
+	</div>
+    <div class="infobox">
+      <p>Room ID: <input id="room_id" type="text" maxlength="12" required inputmode="numeric" placeholder="room id">
+		<input type="button" name="login" value="Log in" onclick="connect()"></p>
+		<input type="file" id="video_file" onchange="play_video()" accept="video/*">
+		<input type="button" onclick="sync_call()" value="play">
+    </div>
+  </div>
+</body>
+</html>

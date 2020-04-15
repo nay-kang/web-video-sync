@@ -37,13 +37,16 @@ var clientID = 0;
 // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
 //
 
+// var mediaConstraints = {
+//   audio: true,            // We want an audio track
+//   video: {
+//     aspectRatio: {
+//       ideal: 1.333333     // 3:2 aspect is preferred
+//     }
+//   }
+// };
 var mediaConstraints = {
-  audio: true,            // We want an audio track
-  video: {
-    aspectRatio: {
-      ideal: 1.333333     // 3:2 aspect is preferred
-    }
-  }
+    frameRate:24
 };
 
 // var myUsername = null;
@@ -249,8 +252,9 @@ async function handleNegotiationNeededEvent() {
 
 function handleTrackEvent(event) {
   log("*** Track event");
+  console.log("track event",event.streams,event.streams[0].getVideoTracks()[0].getSettings())
   document.getElementById("video").srcObject = event.streams[0];
-  document.getElementById("hangup-button").disabled = false;
+//   document.getElementById("hangup-button").disabled = false;
 }
 
 // Handles |icecandidate| events by forwarding the specified
@@ -368,7 +372,7 @@ function closeVideoCall() {
 
   // Disable the hangup button
 
-  document.getElementById("hangup-button").disabled = true;
+//   document.getElementById("hangup-button").disabled = true;
   targetUsername = null;
 }
 
@@ -420,6 +424,7 @@ async function sync_call(evt) {
 
     // // Add the tracks from the stream to the RTCPeerConnection
     webcamStream = document.getElementById("video").captureStream()
+    console.log("sync_call",webcamStream,webcamStream.getVideoTracks())
     try {
       webcamStream.getTracks().forEach(
         transceiver = track => myPeerConnection.addTransceiver(track, {streams: [webcamStream]})
@@ -471,7 +476,8 @@ async function handleVideoOfferMsg(msg) {
 
 //   if (!webcamStream) {
 //     try {
-//       webcamStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
+//     //   webcamStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
+//         webcamStream = document.getElementById("video").captureStream()
 //     } catch(err) {
 //       handleGetUserMediaError(err);
 //       return;
@@ -569,9 +575,16 @@ function reportError(errMessage) {
 }
 
 function play_video(evt){
-    
     var file = document.getElementById('video_file').files[0]
-    var type = file.type
     var fileURL = URL.createObjectURL(file)
     document.getElementById("video").src = URL.createObjectURL(file)
+}
+
+function add_subtitle(){
+    var file = document.getElementById('subtitle_file').files[0]
+    var fileURL = URL.createObjectURL(file)
+    var d = document.createElement('track')
+    d.kind='subtitles'
+    d.src=URL.createObjectURL(file)
+    document.getElementById("video").append(d);
 }
